@@ -1,4 +1,6 @@
 import { Injectable } from "@angular/core";
+import { StudentApi } from "../api/student.api";
+import { StudentReducer } from "../reducers/student.reducer";
 import { StudentStore } from "../stores/student.store";
 
 @Injectable({
@@ -7,9 +9,26 @@ import { StudentStore } from "../stores/student.store";
 
 export class StudentService {
 
+  query = {
+    id_number: '',
+    first_name: '',
+    middle_name: '',
+    last_name: '',
+    level: ''
+  }
+
   constructor(
-    private studentStore: StudentStore
+    private studentStore: StudentStore,
+    private studentApi: StudentApi,
+    private studentReducer: StudentReducer
   ) {
+  }
+
+  getAll() {
+    this.studentApi.query(this.query)
+      .subscribe((res) => {
+        this.studentReducer.setStudentRecords(res)
+      });
   }
 
   setDisplayColumns() {
